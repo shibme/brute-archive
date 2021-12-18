@@ -17,6 +17,7 @@ func AttemptPassword(archive_file string, target_file string, password string) b
 	}
 	out_dir := archive_file + "_out" + string(os.PathSeparator) + uuid.New().String()
 	err := rar.Extract(archive_file, target_file, out_dir)
+	os.RemoveAll(out_dir)
 	return err == nil
 }
 
