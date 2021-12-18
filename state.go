@@ -85,7 +85,7 @@ func LoadState(archive_file string, charset []rune, start_length, end_length, it
 
 func SaveState(state State) {
 	state_file := state.ArchiveFile + ".json"
-	stateJson, _ := json.MarshalIndent(state, "", " ")
+	stateJson, _ := json.Marshal(state)
 	log.Println("Saving state:", string(stateJson))
 	os.WriteFile(state_file, stateJson, 0644)
 }
