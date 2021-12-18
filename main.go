@@ -46,7 +46,7 @@ func crackRar(archive_file, charset string, min_length, max_length, batch_size i
 			passwordFoundEvent(matched_password)
 			break
 		}
-		state, err = NextState(state, 100)
+		state, err = NextState(state, batch_size)
 	}
 }
 
