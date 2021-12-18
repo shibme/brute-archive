@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"log"
+	"os"
 	"sync"
 )
 
@@ -49,20 +51,22 @@ func crackRar(archive_file, charset string, min_length, max_length, batch_size i
 }
 
 func main() {
-	archive_file := "test.rar"
-	charset := "txyur"
-	charset_arr := []rune(charset)
-	state := LoadState(archive_file, charset_arr, 5, 5, 100)
-	var err error = nil
-	for err == nil {
-		matched_password, executorError := groupExecutor(state)
-		if executorError != nil {
-			panic(executorError)
-		}
-		if matched_password != "" {
-			passwordFoundEvent(matched_password)
-			break
-		}
-		state, err = NextState(state, 100)
+	var archive_file string
+	var charset string
+	var min_length int
+	var max_length int
+	var batch_size int
+	flag.StringVar(&archive_file, "file", "", "the archive file to target")
+	flag.StringVar(&charset, "charset", "abcdefghijklmnopqrstuvwxyz", "the character set to use for bruteforce")
+	flag.IntVar(&min_length, "min", 1, "the minimum number of characters to brute-force the password with")
+	flag.IntVar(&max_length, "max", 6, "the minimum number of characters to brute-force the password with")
+	flag.IntVar(&batch_size, "threads", 1000, "the number of executor threads/routines")
+	flag.Parse()
+	if archive_file == "" {
+		flag.Usage()
+	} else if _, err := os.Stat(archive_file); os.IsNotExist(err) {
+		flag.Usage()
+	} else {
+		crackRar(archive_file, charset, min_length, max_length, batch_size)
 	}
 }

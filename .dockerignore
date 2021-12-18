@@ -1,0 +1,11 @@
+*.db
+.vscode
+.gitlab-ci.yml
+.git
+.github
+.gitignore
+Dockerfile
+README.md
+docker-compose.yml
+*.rar
+*.json
