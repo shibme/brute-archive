@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/mholt/archiver/v3"
 )
 
@@ -14,7 +15,8 @@ func AttemptPassword(archive_file string, target_file string, password string) b
 		ImplicitTopLevelFolder: false,
 		Password:               password,
 	}
-	err := rar.Extract(archive_file, target_file, os.TempDir())
+	out_dir := archive_file + "_out" + string(os.PathSeparator) + uuid.New().String()
+	err := rar.Extract(archive_file, target_file, out_dir)
 	return err == nil
 }
 

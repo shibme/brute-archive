@@ -2,7 +2,10 @@ module gitlab.com/shibme/brute-archive
 
 go 1.17
 
-require github.com/mholt/archiver/v3 v3.5.1
+require (
+	github.com/google/uuid v1.3.0
+	github.com/mholt/archiver/v3 v3.5.1
+)
 
 require (
 	github.com/andybalholm/brotli v1.0.1 // indirect

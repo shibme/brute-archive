@@ -7,7 +7,7 @@ import (
 
 func passwordRunner(wg *sync.WaitGroup, state State, password string, matched_password *string) {
 	defer wg.Done()
-	if password == "shibly" {
+	if AttemptPassword(state.ArchiveFile, state.TargetFile, password) {
 		*matched_password = password
 	}
 }
@@ -31,11 +31,28 @@ func passwordFoundEvent(password string) {
 	log.Println("Password Found:", password)
 }
 
+func crackRar(archive_file, charset string, min_length, max_length, batch_size int) {
+	charset_arr := []rune(charset)
+	state := LoadState(archive_file, charset_arr, min_length, max_length, batch_size)
+	var err error = nil
+	for err == nil {
+		matched_password, executorError := groupExecutor(state)
+		if executorError != nil {
+			panic(executorError)
+		}
+		if matched_password != "" {
+			passwordFoundEvent(matched_password)
+			break
+		}
+		state, err = NextState(state, 100)
+	}
+}
+
 func main() {
 	archive_file := "test.rar"
-	charset := "hilybs"
+	charset := "txyur"
 	charset_arr := []rune(charset)
-	state := LoadState(archive_file, charset_arr, 5, 6, 100)
+	state := LoadState(archive_file, charset_arr, 5, 5, 100)
 	var err error = nil
 	for err == nil {
 		matched_password, executorError := groupExecutor(state)
