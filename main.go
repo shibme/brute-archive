@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"runtime"
 	"sync"
 )
 
@@ -51,6 +52,14 @@ func crackRar(archive_file, charset string, min_length, max_length, batch_size i
 }
 
 func main() {
+	maxProcs := runtime.NumCPU() - 2
+	if maxProcs < 1 {
+		maxProcs = 1
+	} else if maxProcs < 2 {
+		maxProcs = 2
+	}
+	log.Println("Starting execution with", maxProcs, "processes")
+	runtime.GOMAXPROCS(maxProcs)
 	var archive_file string
 	var charset string
 	var min_length int
